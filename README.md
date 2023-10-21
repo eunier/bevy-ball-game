@@ -1,3 +1,6 @@
+# Intro to Bevy
+
+```rs
 use bevy::prelude::*;
 
 fn main() {
@@ -103,3 +106,4 @@ pub enum Job {
     FireFighter,
     Lawyer,
 }
+```
