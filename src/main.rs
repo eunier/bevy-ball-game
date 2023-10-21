@@ -5,11 +5,14 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(spawn_player)
         .add_startup_system(spawn_camera)
+        .add_system(player_movement)
         .run();
 }
 
 #[derive(Component)]
 pub struct Player {}
+
+pub const PLAYER_SPEED: f32 = 500.0;
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -35,4 +38,48 @@ pub fn spawn_camera(mut commands: Commands, windows_query: Query<&Window, With<P
         transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
         ..default()
     });
+}
+
+pub fn player_movement(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut player_query: Query<&mut Transform, With<Player>>,
+    time: Res<Time>,
+) {
+    if let Ok(mut transform) = player_query.get_single_mut() {
+        let mut direction = Vec3::ZERO;
+
+        let is_left_key_pressed =
+            keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A);
+
+        let is_right_key_pressed =
+            keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D);
+
+        let is_up_key_pressed =
+            keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W);
+
+        let is_down_key_pressed =
+            keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S);
+
+        if is_left_key_pressed {
+            direction += Vec3::new(-1.0, 0.0, 0.0)
+        }
+
+        if is_right_key_pressed {
+            direction += Vec3::new(1.0, 0.0, 0.0)
+        }
+
+        if is_up_key_pressed {
+            direction += Vec3::new(0.0, 1.0, 0.0)
+        }
+
+        if is_down_key_pressed {
+            direction += Vec3::new(0.0, -1.0, 0.0)
+        }
+
+        if direction.length() > 0.0 {
+            direction = direction.normalize();
+        }
+
+        transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+    }
 }
