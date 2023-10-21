@@ -4,6 +4,7 @@ use rand::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .init_resource::<Score>()
         .add_startup_system(spawn_player)
         .add_startup_system(spawn_camera)
         .add_startup_system(spawn_enemies)
@@ -15,6 +16,7 @@ fn main() {
         .add_system(update_enemy_direction)
         .add_system(confine_enemy_movement)
         .add_system(enemy_hit_player)
+        .add_system(update_score)
         .run();
 }
 
@@ -122,6 +124,7 @@ pub fn confine_player_movement(
 
 pub fn player_hit_start(
     mut commands: Commands,
+    mut score: ResMut<Score>,
     star_query: Query<(Entity, &Transform), With<Star>>,
     player_query: Query<&Transform, With<Player>>,
     audio: Res<Audio>,
@@ -139,6 +142,7 @@ pub fn player_hit_start(
 
             if did_player_hit_star {
                 print!("Player huit star!");
+                score.value += 1;
                 let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
                 audio.play(sound_effect);
                 commands.entity(start_entity).despawn();
@@ -311,5 +315,22 @@ pub fn spawn_star(
 
         let star = Star {};
         commands.spawn((sprite_bundle, star));
+    }
+}
+
+#[derive(Resource)]
+pub struct Score {
+    pub value: u32,
+}
+
+impl Default for Score {
+    fn default() -> Self {
+        Score { value: 0 }
+    }
+}
+
+pub fn update_score(score: Res<Score>) {
+    if score.is_changed() {
+        println!("Score: {}", score.value.to_string());
     }
 }
