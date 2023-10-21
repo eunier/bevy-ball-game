@@ -10,6 +10,7 @@ fn main() {
         .add_startup_system(spawn_star)
         .add_system(player_movement)
         .add_system(confine_player_movement)
+        .add_system(player_hit_start)
         .add_system(enemy_movement)
         .add_system(update_enemy_direction)
         .add_system(confine_enemy_movement)
@@ -115,6 +116,33 @@ pub fn confine_player_movement(
             player_transform.translation.y = y_min;
         } else if player_transform.translation.y > y_max {
             player_transform.translation.y = y_max;
+        }
+    }
+}
+
+pub fn player_hit_start(
+    mut commands: Commands,
+    star_query: Query<(Entity, &Transform), With<Star>>,
+    player_query: Query<&Transform, With<Player>>,
+    audio: Res<Audio>,
+    asset_server: Res<AssetServer>,
+) {
+    if let Ok(player_transform) = player_query.get_single() {
+        for (start_entity, start_transform) in star_query.iter() {
+            let distance = player_transform
+                .translation
+                .distance(start_transform.translation);
+
+            let player_radius = PLAYER_SIZE / 2.0;
+            let star_radius = START_SIZE / 2.0;
+            let did_player_hit_star = distance < player_radius + star_radius;
+
+            if did_player_hit_star {
+                print!("Player huit star!");
+                let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
+                audio.play(sound_effect);
+                commands.entity(start_entity).despawn();
+            }
         }
     }
 }
@@ -238,9 +266,9 @@ pub fn enemy_hit_player(
     audio: Res<Audio>,
     asset_server: Res<AssetServer>,
 ) {
-    if let Ok((player_entity, playere_transform)) = player_query.get_single_mut() {
+    if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
         for enemy_transform in enemy_query.iter() {
-            let distance = playere_transform
+            let distance = player_transform
                 .translation
                 .distance(enemy_transform.translation);
 
@@ -262,6 +290,7 @@ pub fn enemy_hit_player(
 pub struct Star {}
 
 pub const NUMBER_OF_STARS: usize = 10;
+pub const START_SIZE: f32 = 30.0;
 
 pub fn spawn_star(
     mut commands: Commands,
