@@ -147,7 +147,7 @@ pub fn player_hit_start(
             let did_player_hit_star = distance < player_radius + star_radius;
 
             if did_player_hit_star {
-                print!("Player huit star!");
+                println!("Player huit star!");
                 score.value += 1;
                 let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
                 audio.play(sound_effect);
@@ -287,7 +287,7 @@ pub fn enemy_hit_player(
             let did_enemy_hit_player = distance < player_radius + enemy_radius;
 
             if did_enemy_hit_player {
-                print!("Enemy hit player! Game Over!");
+                println!("Enemy hit player! Game Over!");
                 let sound_effect = asset_server.load("audio/explosionCrunch_000.ogg");
                 audio.play(sound_effect);
                 commands.entity(player_entity).despawn();
