@@ -11,6 +11,7 @@ fn main() {
         .add_system(confine_player_movement)
         .add_system(enemy_movement)
         .add_system(update_enemy_direction)
+        .add_system(confine_enemy_movement)
         .run();
 }
 
@@ -122,7 +123,7 @@ pub struct Enemy {
 }
 
 pub const ENEMY_SIZE: f32 = 64.0;
-pub const ENEMY_SPEED: f32 = 400.0;
+pub const ENEMY_SPEED: f32 = 300.0;
 pub const NUMBER_OF_ENEMIES: usize = 4;
 
 pub fn spawn_enemies(
@@ -179,6 +180,32 @@ pub fn update_enemy_direction(
 
         if transform.translation.y < y_min || transform.translation.y > y_max {
             enemy.direction.y *= -1.0
+        }
+    }
+}
+
+pub fn confine_enemy_movement(
+    mut enemy_query: Query<&mut Transform, With<Enemy>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    let window = window_query.get_single().unwrap();
+    let half_enemy_size = ENEMY_SIZE / 2.0;
+    let x_min = half_enemy_size;
+    let x_max = window.width() - half_enemy_size;
+    let y_min = half_enemy_size;
+    let y_max = window.height() - half_enemy_size;
+
+    for mut enemy_transform in enemy_query.iter_mut() {
+        if enemy_transform.translation.x < x_min {
+            enemy_transform.translation.x = x_min
+        } else if enemy_transform.translation.x > x_max {
+            enemy_transform.translation.x = x_max
+        }
+
+        if enemy_transform.translation.y < y_min {
+            enemy_transform.translation.y = y_min
+        } else if enemy_transform.translation.y > y_max {
+            enemy_transform.translation.y = y_max
         }
     }
 }
