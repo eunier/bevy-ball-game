@@ -1,4 +1,4 @@
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 use rand::prelude::*;
 
 fn main() {
@@ -11,6 +11,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_startup_system(spawn_enemies)
         .add_startup_system(spawn_star)
+        .add_system(exit_game)
         .add_system(player_movement)
         .add_system(confine_player_movement)
         .add_system(player_hit_start)
@@ -24,6 +25,15 @@ fn main() {
         .add_system(tick_star_spawn_time)
         .add_system(spawn_stars_over_time)
         .run();
+}
+
+pub fn exit_game(
+    mut app_exit_event_writer: EventWriter<AppExit>,
+    keyboard_input: Res<Input<KeyCode>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::Escape) {
+        app_exit_event_writer.send(AppExit);
+    }
 }
 
 pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<PrimaryWindow>>) {
