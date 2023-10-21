@@ -10,6 +10,7 @@ fn main() {
         .add_system(player_movement)
         .add_system(confine_player_movement)
         .add_system(enemy_movement)
+        .add_system(update_enemy_direction)
         .run();
 }
 
@@ -120,8 +121,9 @@ pub struct Enemy {
     pub direction: Vec2,
 }
 
-pub const NUMBER_OF_ENEMIES: usize = 4;
+pub const ENEMY_SIZE: f32 = 64.0;
 pub const ENEMY_SPEED: f32 = 400.0;
+pub const NUMBER_OF_ENEMIES: usize = 4;
 
 pub fn spawn_enemies(
     mut commands: Commands,
@@ -156,5 +158,27 @@ pub fn enemy_movement(mut enemy_query: Query<(&mut Transform, &Enemy)>, time: Re
     for (mut transform, enemy) in enemy_query.iter_mut() {
         let direction = Vec3::new(enemy.direction.x, enemy.direction.y, 0.0);
         transform.translation += direction * ENEMY_SPEED * time.delta_seconds();
+    }
+}
+
+pub fn update_enemy_direction(
+    mut enemy_query: Query<(&Transform, &mut Enemy)>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    let window = window_query.get_single().unwrap();
+    let half_enemy_size = PLAYER_SIZE / 2.0;
+    let x_min = half_enemy_size;
+    let x_max = window.width() - half_enemy_size;
+    let y_min = half_enemy_size;
+    let y_max = window.height() - half_enemy_size;
+
+    for (transform, mut enemy) in enemy_query.iter_mut() {
+        if transform.translation.x < x_min || transform.translation.x > x_max {
+            enemy.direction.x *= -1.0
+        }
+
+        if transform.translation.y < y_min || transform.translation.y > y_max {
+            enemy.direction.y *= -1.0
+        }
     }
 }
