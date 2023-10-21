@@ -1,7 +1,10 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
 fn main() {
-    App::new().add_plugins(DefaultPlugins).run();
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(spawn_player)
+        .run();
 }
 
 #[derive(Component)]
@@ -13,4 +16,13 @@ pub fn spawn_player(
     asset_server: Res<AssetServer>,
 ) {
     let window = windows_query.get_single().unwrap();
+
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
+            texture: asset_server.load("sprites/ball_blue_large.png"),
+            ..default()
+        },
+        Player {},
+    ));
 }
