@@ -6,20 +6,22 @@ fn main() {
         .add_startup_system(spawn_player)
         .add_startup_system(spawn_camera)
         .add_system(player_movement)
+        .add_system(confine_player_movement)
         .run();
 }
 
 #[derive(Component)]
 pub struct Player {}
 
+pub const PLAYER_SIZE: f32 = 64.0;
 pub const PLAYER_SPEED: f32 = 500.0;
 
 pub fn spawn_player(
     mut commands: Commands,
-    windows_query: Query<&Window, With<PrimaryWindow>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
 ) {
-    let window = windows_query.get_single().unwrap();
+    let window = window_query.get_single().unwrap();
 
     commands.spawn((
         SpriteBundle {
@@ -31,8 +33,8 @@ pub fn spawn_player(
     ));
 }
 
-pub fn spawn_camera(mut commands: Commands, windows_query: Query<&Window, With<PrimaryWindow>>) {
-    let window = windows_query.get_single().unwrap();
+pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<PrimaryWindow>>) {
+    let window = window_query.get_single().unwrap();
 
     commands.spawn(Camera2dBundle {
         transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
@@ -81,5 +83,37 @@ pub fn player_movement(
         }
 
         transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+    }
+}
+
+pub fn confine_player_movement(
+    mut player_query: Query<&mut Transform, With<Player>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    if let Ok(mut player_transform) = player_query.get_single_mut() {
+        let window = window_query.get_single().unwrap();
+        let half_player_size = PLAYER_SIZE / 2.0;
+        let x_min = half_player_size;
+        let x_max = window.width() - half_player_size;
+        let y_min = half_player_size;
+        let y_max = window.height() - half_player_size;
+
+        match (
+            player_transform.translation.x < x_min,
+            player_transform.translation.x > x_max,
+        ) {
+            (true, _) => player_transform.translation.x = x_min,
+            (_, true) => player_transform.translation.x = x_max,
+            _ => (),
+        }
+
+        match (
+            player_transform.translation.y < y_min,
+            player_transform.translation.y > y_max,
+        ) {
+            (true, _) => player_transform.translation.y = y_min,
+            (_, true) => player_transform.translation.y = y_max,
+            _ => (),
+        }
     }
 }
