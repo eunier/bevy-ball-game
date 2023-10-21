@@ -68,19 +68,19 @@ pub fn player_movement(
             keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S);
 
         if is_left_key_pressed {
-            direction += Vec3::new(-1.0, 0.0, 0.0)
+            direction += Vec3::new(-1.0, 0.0, 0.0);
         }
 
         if is_right_key_pressed {
-            direction += Vec3::new(1.0, 0.0, 0.0)
+            direction += Vec3::new(1.0, 0.0, 0.0);
         }
 
         if is_up_key_pressed {
-            direction += Vec3::new(0.0, 1.0, 0.0)
+            direction += Vec3::new(0.0, 1.0, 0.0);
         }
 
         if is_down_key_pressed {
-            direction += Vec3::new(0.0, -1.0, 0.0)
+            direction += Vec3::new(0.0, -1.0, 0.0);
         }
 
         if direction.length() > 0.0 {
@@ -104,15 +104,15 @@ pub fn confine_player_movement(
         let y_max = window.height() - half_player_size;
 
         if player_transform.translation.x < x_min {
-            player_transform.translation.x = x_min
+            player_transform.translation.x = x_min;
         } else if player_transform.translation.x > x_max {
-            player_transform.translation.x = x_max
+            player_transform.translation.x = x_max;
         }
 
         if player_transform.translation.y < y_min {
-            player_transform.translation.y = y_min
+            player_transform.translation.y = y_min;
         } else if player_transform.translation.y > y_max {
-            player_transform.translation.y = y_max
+            player_transform.translation.y = y_max;
         }
     }
 }
@@ -165,6 +165,8 @@ pub fn enemy_movement(mut enemy_query: Query<(&mut Transform, &Enemy)>, time: Re
 pub fn update_enemy_direction(
     mut enemy_query: Query<(&Transform, &mut Enemy)>,
     window_query: Query<&Window, With<PrimaryWindow>>,
+    audio: Res<Audio>,
+    asset_server: Res<AssetServer>,
 ) {
     let window = window_query.get_single().unwrap();
     let half_enemy_size = PLAYER_SIZE / 2.0;
@@ -174,12 +176,29 @@ pub fn update_enemy_direction(
     let y_max = window.height() - half_enemy_size;
 
     for (transform, mut enemy) in enemy_query.iter_mut() {
+        let mut is_direction_changed = false;
+
         if transform.translation.x < x_min || transform.translation.x > x_max {
-            enemy.direction.x *= -1.0
+            enemy.direction.x *= -1.0;
+            is_direction_changed = true;
         }
 
         if transform.translation.y < y_min || transform.translation.y > y_max {
-            enemy.direction.y *= -1.0
+            enemy.direction.y *= -1.0;
+            is_direction_changed = true;
+        }
+
+        if is_direction_changed {
+            let sound_effect_1 = asset_server.load("audio/pluck_001.ogg");
+            let sound_effect_2 = asset_server.load("audio/pluck_002.ogg");
+
+            let sound_effect = if random::<f32>() > 0.5 {
+                sound_effect_1
+            } else {
+                sound_effect_2
+            };
+
+            audio.play(sound_effect);
         }
     }
 }
@@ -197,15 +216,15 @@ pub fn confine_enemy_movement(
 
     for mut enemy_transform in enemy_query.iter_mut() {
         if enemy_transform.translation.x < x_min {
-            enemy_transform.translation.x = x_min
+            enemy_transform.translation.x = x_min;
         } else if enemy_transform.translation.x > x_max {
-            enemy_transform.translation.x = x_max
+            enemy_transform.translation.x = x_max;
         }
 
         if enemy_transform.translation.y < y_min {
-            enemy_transform.translation.y = y_min
+            enemy_transform.translation.y = y_min;
         } else if enemy_transform.translation.y > y_max {
-            enemy_transform.translation.y = y_max
+            enemy_transform.translation.y = y_max;
         }
     }
 }
