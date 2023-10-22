@@ -10,14 +10,7 @@ mod star;
 use bevy::prelude::*;
 use camera::plugins::CameraPlugin;
 use enemy::plugins::EnemyPlugin;
-// use enemy::{
-//     resources::EnemySpawnTimer,
-//     systems::{
-//         confine_enemy_movement, enemy_hit_player, enemy_movement, spawn_enemies,
-//         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
-//     },
-// };
-use exit::systems::exit_game;
+use exit::plugins::ExitPlugin;
 use game_over::{events::GameOver, systems::handle_game_over};
 use high_score::{
     resources::HighScores,
@@ -35,6 +28,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(CameraPlugin)
         .add_plugin(EnemyPlugin)
+        .add_plugin(ExitPlugin)
         // .init_resource::<EnemySpawnTimer>()
         .init_resource::<StarSpawnTimer>()
         .init_resource::<Score>()
@@ -44,7 +38,7 @@ fn main() {
         // .add_startup_system(spawn_camera)
         // .add_startup_system(spawn_enemies)
         .add_startup_system(spawn_star)
-        .add_system(exit_game)
+        // .add_system(exit_game)
         .add_system(player_movement)
         .add_system(confine_player_movement)
         .add_system(player_hit_start)
