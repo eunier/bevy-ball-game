@@ -9,13 +9,14 @@ mod star;
 
 use bevy::prelude::*;
 use camera::plugins::CameraPlugin;
-use enemy::{
-    resources::EnemySpawnTimer,
-    systems::{
-        confine_enemy_movement, enemy_hit_player, enemy_movement, spawn_enemies,
-        spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
-    },
-};
+use enemy::plugins::EnemyPlugin;
+// use enemy::{
+//     resources::EnemySpawnTimer,
+//     systems::{
+//         confine_enemy_movement, enemy_hit_player, enemy_movement, spawn_enemies,
+//         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
+//     },
+// };
 use exit::systems::exit_game;
 use game_over::{events::GameOver, systems::handle_game_over};
 use high_score::{
@@ -33,25 +34,26 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(CameraPlugin)
-        .init_resource::<EnemySpawnTimer>()
+        .add_plugin(EnemyPlugin)
+        // .init_resource::<EnemySpawnTimer>()
         .init_resource::<StarSpawnTimer>()
         .init_resource::<Score>()
         .init_resource::<HighScores>()
         .add_event::<GameOver>()
         .add_startup_system(spawn_player)
         // .add_startup_system(spawn_camera)
-        .add_startup_system(spawn_enemies)
+        // .add_startup_system(spawn_enemies)
         .add_startup_system(spawn_star)
         .add_system(exit_game)
         .add_system(player_movement)
         .add_system(confine_player_movement)
         .add_system(player_hit_start)
-        .add_system(enemy_movement)
-        .add_system(update_enemy_direction)
-        .add_system(confine_enemy_movement)
-        .add_system(enemy_hit_player)
-        .add_system(tick_enemy_spawn_time)
-        .add_system(spawn_enemies_over_time)
+        // .add_system(enemy_movement)
+        // .add_system(update_enemy_direction)
+        // .add_system(confine_enemy_movement)
+        // .add_system(enemy_hit_player)
+        // .add_system(tick_enemy_spawn_time)
+        // .add_system(spawn_enemies_over_time)
         .add_system(update_score)
         .add_system(update_high_scores)
         .add_system(high_scores_updated)
