@@ -1,9 +1,8 @@
+use super::constants::STAR_SPAWN_TIME;
 use bevy::{
     prelude::Resource,
     time::{Timer, TimerMode},
 };
-
-use super::constants::STAR_SPAWN_TIME;
 
 #[derive(Resource)]
 pub struct StarSpawnTimer {
