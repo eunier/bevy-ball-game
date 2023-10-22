@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::simulation::states::SimulationState;
+
 use super::states::AppState;
 
 pub fn transition_to_game_state(
@@ -23,6 +25,7 @@ pub fn transition_to_main_menu_state(
     if keyboard_input.just_pressed(KeyCode::M) {
         if app_state.0 != AppState::MainMenu {
             commands.insert_resource(NextState(Some(AppState::MainMenu)));
+            commands.insert_resource(NextState(Some(SimulationState::Paused)));
             println!("Entered AppState::MainMenu");
         }
     }
