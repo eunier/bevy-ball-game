@@ -1,4 +1,4 @@
-use bevy::prelude::{App, IntoSystemConfig, IntoSystemSetConfig, Plugin};
+use bevy::prelude::*;
 
 use super::systems::{
     confine_player_movement, player_hit_start, player_movement, spawn_player, ConfinementSystemSet,
