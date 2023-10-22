@@ -1,9 +1,16 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::random;
 
-use crate::{player::{constants::PLAYER_SIZE, components::Player}, GameOver, Score};
+use crate::{
+    player::{components::Player, constants::PLAYER_SIZE},
+    GameOver, Score,
+};
 
-use super::{components::Enemy, constants::{NUMBER_OF_ENEMIES, ENEMY_SIZE, ENEMY_SPEED}};
+use super::{
+    components::Enemy,
+    constants::{ENEMY_SIZE, ENEMY_SPEED, NUMBER_OF_ENEMIES},
+    resources::EnemySpawnTimer,
+};
 
 pub fn spawn_enemies(
     mut commands: Commands,
@@ -135,5 +142,38 @@ pub fn enemy_hit_player(
                 game_over_event_writer.send(GameOver { score: score.value });
             }
         }
+    }
+}
+
+pub fn tick_enemy_spawn_time(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
+    enemy_spawn_timer.timer.tick(time.delta());
+}
+
+pub fn spawn_enemies_over_time(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>,
+    enemy_spawn_timer: ResMut<EnemySpawnTimer>,
+) {
+    if enemy_spawn_timer.timer.finished() {
+        let window = window_query.get_single().unwrap();
+        let random_x = random::<f32>() * window.width();
+        let random_y = random::<f32>() * window.height();
+
+        let sprite_bundle = SpriteBundle {
+            transform: Transform::from_xyz(random_x, random_y, 0.0),
+            texture: asset_server.load("sprites/ball_red_large.png"),
+            ..default()
+        };
+
+        let enemy = Enemy {
+            direction: Vec2::new(
+                random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
+                random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
+            )
+            .normalize(),
+        };
+
+        commands.spawn((sprite_bundle, enemy));
     }
 }

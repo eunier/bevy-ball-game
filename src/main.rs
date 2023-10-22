@@ -3,10 +3,10 @@ mod player;
 
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 use enemy::{
-    components::Enemy,
+    resources::EnemySpawnTimer,
     systems::{
         confine_enemy_movement, enemy_hit_player, enemy_movement, spawn_enemies,
-        update_enemy_direction,
+        spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
     },
 };
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
@@ -325,53 +325,53 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 //     }
 // }
 
-#[derive(Resource)]
-pub struct EnemySpawnTimer {
-    pub timer: Timer,
-}
+// #[derive(Resource)]
+// pub struct EnemySpawnTimer {
+//     pub timer: Timer,
+// }
 
-pub const ENEMY_SPAWN_TIME: f32 = 5.0;
+// pub const ENEMY_SPAWN_TIME: f32 = 5.0;
 
-impl Default for EnemySpawnTimer {
-    fn default() -> Self {
-        EnemySpawnTimer {
-            timer: Timer::from_seconds(ENEMY_SPAWN_TIME, TimerMode::Repeating),
-        }
-    }
-}
+// impl Default for EnemySpawnTimer {
+//     fn default() -> Self {
+//         EnemySpawnTimer {
+//             timer: Timer::from_seconds(ENEMY_SPAWN_TIME, TimerMode::Repeating),
+//         }
+//     }
+// }
 
-pub fn tick_enemy_spawn_time(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
-    enemy_spawn_timer.timer.tick(time.delta());
-}
+// pub fn tick_enemy_spawn_time(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
+//     enemy_spawn_timer.timer.tick(time.delta());
+// }
 
-pub fn spawn_enemies_over_time(
-    mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-    enemy_spawn_timer: ResMut<EnemySpawnTimer>,
-) {
-    if enemy_spawn_timer.timer.finished() {
-        let window = window_query.get_single().unwrap();
-        let random_x = random::<f32>() * window.width();
-        let random_y = random::<f32>() * window.height();
+// pub fn spawn_enemies_over_time(
+//     mut commands: Commands,
+//     window_query: Query<&Window, With<PrimaryWindow>>,
+//     asset_server: Res<AssetServer>,
+//     enemy_spawn_timer: ResMut<EnemySpawnTimer>,
+// ) {
+//     if enemy_spawn_timer.timer.finished() {
+//         let window = window_query.get_single().unwrap();
+//         let random_x = random::<f32>() * window.width();
+//         let random_y = random::<f32>() * window.height();
 
-        let sprite_bundle = SpriteBundle {
-            transform: Transform::from_xyz(random_x, random_y, 0.0),
-            texture: asset_server.load("sprites/ball_red_large.png"),
-            ..default()
-        };
+//         let sprite_bundle = SpriteBundle {
+//             transform: Transform::from_xyz(random_x, random_y, 0.0),
+//             texture: asset_server.load("sprites/ball_red_large.png"),
+//             ..default()
+//         };
 
-        let enemy = Enemy {
-            direction: Vec2::new(
-                random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
-                random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
-            )
-            .normalize(),
-        };
+//         let enemy = Enemy {
+//             direction: Vec2::new(
+//                 random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
+//                 random::<f32>() * (if random::<f32>() > 0.5 { 1.0 } else { -1.0 }),
+//             )
+//             .normalize(),
+//         };
 
-        commands.spawn((sprite_bundle, enemy));
-    }
-}
+//         commands.spawn((sprite_bundle, enemy));
+//     }
+// }
 
 #[derive(Component)]
 pub struct Star {}
