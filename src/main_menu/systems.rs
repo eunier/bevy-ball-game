@@ -2,7 +2,10 @@ use bevy::prelude::*;
 
 use super::{
     components::{MainMenu, PlayButton, QuitButton},
-    constants::{BUTTON_STYLE, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, TITLE_STYLE},
+    constants::{
+        BUTTON_STYLE, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, PRESSED_BUTTON_COLOR,
+        TITLE_STYLE,
+    },
     helpers::{get_button_text_style, get_title_text_style},
 };
 
@@ -12,8 +15,12 @@ pub fn interact_with_play_button(
         (Changed<Interaction>, With<PlayButton>),
     >,
 ) {
-    if let Ok((interaction, mut background_color)) => button_query.get_single_mut() {
-        
+    if let Ok((interaction, mut background_color)) = button_query.get_single_mut() {
+        match *interaction {
+            Interaction::Clicked => *background_color = PRESSED_BUTTON_COLOR.into(),
+            Interaction::Hovered => *background_color = PRESSED_BUTTON_COLOR.into(),
+            Interaction::None => *background_color = PRESSED_BUTTON_COLOR.into(),
+        }
     }
 }
 
