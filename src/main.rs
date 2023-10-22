@@ -1,7 +1,14 @@
+mod player_a;
+
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
+// use player_a::hello as hi;
 use rand::prelude::*;
 
+// hi::();
+
 fn main() {
+    player_a::hi();
+
     App::new()
         .add_plugins(DefaultPlugins)
         .init_resource::<EnemySpawnTimer>()
