@@ -25,6 +25,38 @@ pub fn spawn_player(
     ));
 }
 
+pub fn player_hit_start(
+    mut commands: Commands,
+    mut score: ResMut<Score>,
+    star_query: Query<(Entity, &Transform), With<Star>>,
+    player_query: Query<&Transform, With<Player>>,
+    audio: Res<Audio>,
+    asset_server: Res<AssetServer>,
+) {
+    if let Ok(player_transform) = player_query.get_single() {
+        for (start_entity, start_transform) in star_query.iter() {
+            let distance = player_transform
+                .translation
+                .distance(start_transform.translation);
+
+            let player_radius = PLAYER_SIZE / 2.0;
+            let star_radius = START_SIZE / 2.0;
+            let did_player_hit_star = distance < player_radius + star_radius;
+
+            if did_player_hit_star {
+                println!("Player huit star!");
+                score.value += 1;
+                let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
+                audio.play(sound_effect);
+                commands.entity(start_entity).despawn();
+            }
+        }
+    }
+}
+
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub struct MovementSystemSet;
+
 pub fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
     mut player_query: Query<&mut Transform, With<Player>>,
@@ -69,6 +101,9 @@ pub fn player_movement(
     }
 }
 
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub struct ConfinementSystemSet;
+
 pub fn confine_player_movement(
     mut player_query: Query<&mut Transform, With<Player>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
@@ -91,35 +126,6 @@ pub fn confine_player_movement(
             player_transform.translation.y = y_min;
         } else if player_transform.translation.y > y_max {
             player_transform.translation.y = y_max;
-        }
-    }
-}
-
-pub fn player_hit_start(
-    mut commands: Commands,
-    mut score: ResMut<Score>,
-    star_query: Query<(Entity, &Transform), With<Star>>,
-    player_query: Query<&Transform, With<Player>>,
-    audio: Res<Audio>,
-    asset_server: Res<AssetServer>,
-) {
-    if let Ok(player_transform) = player_query.get_single() {
-        for (start_entity, start_transform) in star_query.iter() {
-            let distance = player_transform
-                .translation
-                .distance(start_transform.translation);
-
-            let player_radius = PLAYER_SIZE / 2.0;
-            let star_radius = START_SIZE / 2.0;
-            let did_player_hit_star = distance < player_radius + star_radius;
-
-            if did_player_hit_star {
-                println!("Player huit star!");
-                score.value += 1;
-                let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
-                audio.play(sound_effect);
-                commands.entity(start_entity).despawn();
-            }
         }
     }
 }
