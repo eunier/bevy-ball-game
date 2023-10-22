@@ -1,5 +1,5 @@
 mod enemy;
-mod exit_game;
+mod exit;
 mod game_over;
 mod high_score;
 mod player;
@@ -14,7 +14,7 @@ use enemy::{
         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
     },
 };
-use exit_game::systems::exit_game;
+use exit::systems::exit_game;
 use game_over::{events::GameOver, systems::handle_game_over};
 use high_score::{
     resources::HighScores,
