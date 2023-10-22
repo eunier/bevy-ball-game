@@ -1,5 +1,6 @@
 mod enemy;
 mod player;
+mod score;
 mod star;
 
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
@@ -11,6 +12,7 @@ use enemy::{
     },
 };
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
+use score::{resources::Score, systems::update_score};
 use star::{
     resources::StarSpawnTimer,
     systems::{spawn_star, spawn_stars_over_time, tick_star_spawn_time},
@@ -446,22 +448,22 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 //     }
 // }
 
-#[derive(Resource)]
-pub struct Score {
-    pub value: u32,
-}
+// #[derive(Resource)]
+// pub struct Score {
+//     pub value: u32,
+// }
 
-impl Default for Score {
-    fn default() -> Self {
-        Score { value: 0 }
-    }
-}
+// impl Default for Score {
+//     fn default() -> Self {
+//         Score { value: 0 }
+//     }
+// }
 
-pub fn update_score(score: Res<Score>) {
-    if score.is_changed() {
-        println!("Score: {}", score.value.to_string());
-    }
-}
+// pub fn update_score(score: Res<Score>) {
+//     if score.is_changed() {
+//         println!("Score: {}", score.value.to_string());
+//     }
+// }
 
 #[derive(Resource, Debug)]
 pub struct HighScores {
