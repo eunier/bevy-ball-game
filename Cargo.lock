@@ -298,7 +298,7 @@ dependencies = [
 
 [[package]]
 name = "bevy-ball-game"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "bevy",
  "rand",
