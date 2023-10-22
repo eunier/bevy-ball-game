@@ -1,5 +1,5 @@
 use super::resources::HighScores;
-use crate::GameOver;
+use crate::game_over::events::GameOver;
 use bevy::prelude::*;
 
 pub fn update_high_scores(

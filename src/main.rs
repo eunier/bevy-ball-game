@@ -1,4 +1,5 @@
 mod enemy;
+mod game_over;
 mod high_score;
 mod player;
 mod score;
@@ -12,7 +13,11 @@ use enemy::{
         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
     },
 };
-use high_score::{resources::HighScores, systems::{high_scores_updated, update_high_scores}};
+use game_over::{events::GameOver, systems::handle_game_over};
+use high_score::{
+    resources::HighScores,
+    systems::{high_scores_updated, update_high_scores},
+};
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
 use score::{resources::Score, systems::update_score};
 use star::{
@@ -493,12 +498,12 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 //     }
 // }
 
-pub struct GameOver {
-    pub score: u32,
-}
+// pub struct GameOver {
+//     pub score: u32,
+// }
 
-pub fn handle_game_over(mut game_over_event_reader: EventReader<GameOver>) {
-    for event in game_over_event_reader.iter() {
-        println!("Your final score is: {}", event.score.to_string());
-    }
-}
+// pub fn handle_game_over(mut game_over_event_reader: EventReader<GameOver>) {
+//     for event in game_over_event_reader.iter() {
+//         println!("Your final score is: {}", event.score.to_string());
+//     }
+// }

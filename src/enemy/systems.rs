@@ -2,8 +2,9 @@ use bevy::{prelude::*, window::PrimaryWindow};
 use rand::random;
 
 use crate::{
+    game_over::events::GameOver,
     player::{components::Player, constants::PLAYER_SIZE},
-    GameOver, Score,
+    Score,
 };
 
 use super::{
