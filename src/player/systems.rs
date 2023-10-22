@@ -1,12 +1,14 @@
-use super::{
-    components::Player,
-    constants::{PLAYER_SIZE, PLAYER_SPEED},
-};
+use bevy::{prelude::*, window::PrimaryWindow};
+
 use crate::{
     score::resources::Score,
     star::{components::Star, constants::START_SIZE},
 };
-use bevy::{prelude::*, window::PrimaryWindow};
+
+use super::{
+    components::Player,
+    constants::{PLAYER_SIZE, PLAYER_SPEED},
+};
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -23,6 +25,12 @@ pub fn spawn_player(
         },
         Player {},
     ));
+}
+
+pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<Player>>) {
+    for player_entity in player_query.iter() {
+        commands.entity(player_entity).despawn();
+    }
 }
 
 pub fn player_hit_start(
