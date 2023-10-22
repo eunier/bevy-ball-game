@@ -8,7 +8,7 @@ mod score;
 mod star;
 
 use bevy::prelude::*;
-use camera::systems::spawn_camera;
+use camera::plugins::CameraPlugin;
 use enemy::{
     resources::EnemySpawnTimer,
     systems::{
@@ -32,13 +32,14 @@ use star::{
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(CameraPlugin)
         .init_resource::<EnemySpawnTimer>()
         .init_resource::<StarSpawnTimer>()
         .init_resource::<Score>()
         .init_resource::<HighScores>()
         .add_event::<GameOver>()
         .add_startup_system(spawn_player)
-        .add_startup_system(spawn_camera)
+        // .add_startup_system(spawn_camera)
         .add_startup_system(spawn_enemies)
         .add_startup_system(spawn_star)
         .add_system(exit_game)
