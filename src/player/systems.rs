@@ -3,8 +3,8 @@ use super::{
     constants::{PLAYER_SIZE, PLAYER_SPEED},
 };
 use crate::{
+    score::resources::Score,
     star::{components::Star, constants::START_SIZE},
-    Score,
 };
 use bevy::{prelude::*, window::PrimaryWindow};
 

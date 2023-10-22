@@ -6,7 +6,7 @@ use super::{
 use crate::{
     game_over::events::GameOver,
     player::{components::Player, constants::PLAYER_SIZE},
-    Score,
+    score::resources::Score,
 };
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::random;
