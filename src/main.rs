@@ -4,9 +4,11 @@ use rand::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .init_resource::<Score>()
-        .init_resource::<StarSpawnTimer>()
         .init_resource::<EnemySpawnTimer>()
+        .init_resource::<StarSpawnTimer>()
+        .init_resource::<Score>()
+        .init_resource::<HighScores>()
+        .add_event::<GameOver>()
         .add_startup_system(spawn_player)
         .add_startup_system(spawn_camera)
         .add_startup_system(spawn_enemies)
@@ -22,8 +24,11 @@ fn main() {
         .add_system(tick_enemy_spawn_time)
         .add_system(spawn_enemies_over_time)
         .add_system(update_score)
+        .add_system(update_high_scores)
+        .add_system(high_scores_updated)
         .add_system(tick_star_spawn_time)
         .add_system(spawn_stars_over_time)
+        .add_system(handle_game_over)
         .run();
 }
 
@@ -281,10 +286,12 @@ pub fn confine_enemy_movement(
 
 pub fn enemy_hit_player(
     mut commands: Commands,
+    mut game_over_event_writer: EventWriter<GameOver>,
     mut player_query: Query<(Entity, &Transform), With<Player>>,
-    enemy_query: Query<&Transform, With<Enemy>>,
-    audio: Res<Audio>,
     asset_server: Res<AssetServer>,
+    audio: Res<Audio>,
+    enemy_query: Query<&Transform, With<Enemy>>,
+    score: Res<Score>,
 ) {
     if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
         for enemy_transform in enemy_query.iter() {
@@ -301,6 +308,7 @@ pub fn enemy_hit_player(
                 let sound_effect = asset_server.load("audio/explosionCrunch_000.ogg");
                 audio.play(sound_effect);
                 commands.entity(player_entity).despawn();
+                game_over_event_writer.send(GameOver { score: score.value });
             }
         }
     }
@@ -437,5 +445,41 @@ impl Default for Score {
 pub fn update_score(score: Res<Score>) {
     if score.is_changed() {
         println!("Score: {}", score.value.to_string());
+    }
+}
+
+#[derive(Resource, Debug)]
+pub struct HighScores {
+    pub scores: Vec<(String, u32)>,
+}
+
+impl Default for HighScores {
+    fn default() -> Self {
+        HighScores { scores: Vec::new() }
+    }
+}
+
+pub fn update_high_scores(
+    mut game_over_event_reader: EventReader<GameOver>,
+    mut high_scores: ResMut<HighScores>,
+) {
+    for event in game_over_event_reader.iter() {
+        high_scores.scores.push(("Player".to_string(), event.score));
+    }
+}
+
+pub fn high_scores_updated(high_scores: Res<HighScores>) {
+    if high_scores.is_changed() {
+        println!("High Scores: {:?}", high_scores)
+    }
+}
+
+pub struct GameOver {
+    pub score: u32,
+}
+
+pub fn handle_game_over(mut game_over_event_reader: EventReader<GameOver>) {
+    for event in game_over_event_reader.iter() {
+        println!("Your final score is: {}", event.score.to_string());
     }
 }
