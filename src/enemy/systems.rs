@@ -1,15 +1,17 @@
-use super::{
-    components::Enemy,
-    constants::{ENEMY_SIZE, ENEMY_SPEED, NUMBER_OF_ENEMIES},
-    resources::EnemySpawnTimer,
-};
+use bevy::{prelude::*, window::PrimaryWindow};
+use rand::random;
+
 use crate::{
     game_over::events::GameOver,
     player::{components::Player, constants::PLAYER_SIZE},
     score::resources::Score,
 };
-use bevy::{prelude::*, window::PrimaryWindow};
-use rand::random;
+
+use super::{
+    components::Enemy,
+    constants::{ENEMY_SIZE, ENEMY_SPEED, NUMBER_OF_ENEMIES},
+    resources::EnemySpawnTimer,
+};
 
 pub fn spawn_enemies(
     mut commands: Commands,
