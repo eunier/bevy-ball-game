@@ -1,5 +1,6 @@
 mod enemy;
 mod player;
+mod star;
 
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 use enemy::{
@@ -10,7 +11,10 @@ use enemy::{
     },
 };
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
-use rand::random;
+use star::{
+    resources::StarSpawnTimer,
+    systems::{spawn_star, spawn_stars_over_time, tick_star_spawn_time},
+};
 
 fn main() {
     App::new()
@@ -373,74 +377,74 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 //     }
 // }
 
-#[derive(Component)]
-pub struct Star {}
+// #[derive(Component)]
+// pub struct Star {}
 
-pub const NUMBER_OF_STARS: usize = 10;
-pub const START_SIZE: f32 = 30.0;
+// pub const NUMBER_OF_STARS: usize = 10;
+// pub const START_SIZE: f32 = 30.0;
 
-pub fn spawn_star(
-    mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-) {
-    let window = window_query.get_single().unwrap();
+// pub fn spawn_star(
+//     mut commands: Commands,
+//     window_query: Query<&Window, With<PrimaryWindow>>,
+//     asset_server: Res<AssetServer>,
+// ) {
+//     let window = window_query.get_single().unwrap();
 
-    for _ in 0..NUMBER_OF_STARS {
-        let random_x = random::<f32>() * window.width();
-        let random_y = random::<f32>() * window.height();
+//     for _ in 0..NUMBER_OF_STARS {
+//         let random_x = random::<f32>() * window.width();
+//         let random_y = random::<f32>() * window.height();
 
-        let sprite_bundle = SpriteBundle {
-            transform: Transform::from_xyz(random_x, random_y, 0.0),
-            texture: asset_server.load("sprites/star.png"),
-            ..default()
-        };
+//         let sprite_bundle = SpriteBundle {
+//             transform: Transform::from_xyz(random_x, random_y, 0.0),
+//             texture: asset_server.load("sprites/star.png"),
+//             ..default()
+//         };
 
-        let star = Star {};
-        commands.spawn((sprite_bundle, star));
-    }
-}
+//         let star = Star {};
+//         commands.spawn((sprite_bundle, star));
+//     }
+// }
 
-#[derive(Resource)]
-pub struct StarSpawnTimer {
-    pub timer: Timer,
-}
+// #[derive(Resource)]
+// pub struct StarSpawnTimer {
+//     pub timer: Timer,
+// }
 
-pub const STAR_SPAWN_TIME: f32 = 1.0;
+// pub const STAR_SPAWN_TIME: f32 = 1.0;
 
-impl Default for StarSpawnTimer {
-    fn default() -> Self {
-        StarSpawnTimer {
-            timer: Timer::from_seconds(STAR_SPAWN_TIME, TimerMode::Repeating),
-        }
-    }
-}
+// impl Default for StarSpawnTimer {
+//     fn default() -> Self {
+//         StarSpawnTimer {
+//             timer: Timer::from_seconds(STAR_SPAWN_TIME, TimerMode::Repeating),
+//         }
+//     }
+// }
 
-pub fn tick_star_spawn_time(mut star_spawn_timer: ResMut<StarSpawnTimer>, time: Res<Time>) {
-    star_spawn_timer.timer.tick(time.delta());
-}
+// pub fn tick_star_spawn_time(mut star_spawn_timer: ResMut<StarSpawnTimer>, time: Res<Time>) {
+//     star_spawn_timer.timer.tick(time.delta());
+// }
 
-pub fn spawn_stars_over_time(
-    mut commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-    star_spawn_timer: ResMut<StarSpawnTimer>,
-) {
-    if star_spawn_timer.timer.finished() {
-        let window = window_query.get_single().unwrap();
-        let random_x = random::<f32>() * window.width();
-        let random_y = random::<f32>() * window.height();
+// pub fn spawn_stars_over_time(
+//     mut commands: Commands,
+//     window_query: Query<&Window, With<PrimaryWindow>>,
+//     asset_server: Res<AssetServer>,
+//     star_spawn_timer: ResMut<StarSpawnTimer>,
+// ) {
+//     if star_spawn_timer.timer.finished() {
+//         let window = window_query.get_single().unwrap();
+//         let random_x = random::<f32>() * window.width();
+//         let random_y = random::<f32>() * window.height();
 
-        let sprite_bundle = SpriteBundle {
-            transform: Transform::from_xyz(random_x, random_y, 0.0),
-            texture: asset_server.load("sprites/star.png"),
-            ..default()
-        };
+//         let sprite_bundle = SpriteBundle {
+//             transform: Transform::from_xyz(random_x, random_y, 0.0),
+//             texture: asset_server.load("sprites/star.png"),
+//             ..default()
+//         };
 
-        let star = Star {};
-        commands.spawn((sprite_bundle, star));
-    }
-}
+//         let star = Star {};
+//         commands.spawn((sprite_bundle, star));
+//     }
+// }
 
 #[derive(Resource)]
 pub struct Score {

@@ -2,7 +2,10 @@ use super::{
     components::Player,
     constants::{PLAYER_SIZE, PLAYER_SPEED},
 };
-use crate::{Score, Star, START_SIZE};
+use crate::{
+    star::{components::Star, constants::START_SIZE},
+    Score,
+};
 use bevy::{prelude::*, window::PrimaryWindow};
 
 pub fn spawn_player(
