@@ -11,7 +11,7 @@ use bevy::prelude::*;
 use camera::plugins::CameraPlugin;
 use enemy::plugins::EnemyPlugin;
 use exit::plugins::ExitPlugin;
-use game_over::{events::GameOver, systems::handle_game_over};
+use game_over::plugins::GameOverPlugin;
 use high_score::{
     resources::HighScores,
     systems::{high_scores_updated, update_high_scores},
@@ -29,11 +29,12 @@ fn main() {
         .add_plugin(CameraPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(ExitPlugin)
+        .add_plugin(GameOverPlugin)
         // .init_resource::<EnemySpawnTimer>()
         .init_resource::<StarSpawnTimer>()
         .init_resource::<Score>()
         .init_resource::<HighScores>()
-        .add_event::<GameOver>()
+        // .add_event::<GameOver>()
         .add_startup_system(spawn_player)
         // .add_startup_system(spawn_camera)
         // .add_startup_system(spawn_enemies)
@@ -53,7 +54,7 @@ fn main() {
         .add_system(high_scores_updated)
         .add_system(tick_star_spawn_time)
         .add_system(spawn_stars_over_time)
-        .add_system(handle_game_over)
+        // .add_system(handle_game_over)
         .run();
 }
 
