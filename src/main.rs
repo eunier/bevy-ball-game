@@ -2,12 +2,14 @@ mod enemy;
 mod player;
 
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
-use enemy::{components::Enemy, constants::{NUMBER_OF_ENEMIES, ENEMY_SPEED, ENEMY_SIZE}, systems::{spawn_enemies, enemy_movement, update_enemy_direction, confine_enemy_movement, enemy_hit_player}};
-use player::{
-    components::Player,
-    constants::PLAYER_SIZE,
-    systems::{confine_player_movement, player_hit_start, player_movement, spawn_player},
+use enemy::{
+    components::Enemy,
+    systems::{
+        confine_enemy_movement, enemy_hit_player, enemy_movement, spawn_enemies,
+        update_enemy_direction,
+    },
 };
+use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
 use rand::random;
 
 fn main() {
