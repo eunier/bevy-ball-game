@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use super::{
     components::{MainMenu, PlayButton, QuitButton},
-    constants::{BUTTON_STYLE, NORMAL_BUTTON_COLOR},
+    constants::{BUTTON_STYLE, NORMAL_BUTTON_COLOR, MAIN_MENU_STYLE, TITLE_STYLE, IMAGE_STYLE}, helpers::{get_title_text_style, get_button_text_style},
 };
 
 pub fn spawn_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -19,21 +19,45 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
     let main_menu_entity = commands
         .spawn((
             NodeBundle {
-                style: Style {
-                    align_content: AlignContent::Center,
-                    flex_direction: FlexDirection::Column,
-                    justify_content: JustifyContent::Center,
-                    size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
-                    ..default()
-                },
-                background_color: Color::RED.into(),
+                style: MAIN_MENU_STYLE,
                 ..default()
             },
             MainMenu {},
         ))
         .with_children(|parent| {
-            // title
-            // play
+            // === Title ===
+            parent
+                .spawn(NodeBundle {
+                    style: TITLE_STYLE,
+                    ..default()
+                })
+                .with_children(|parent| {
+                    // Image 1
+                    parent.spawn(ImageBundle {
+                        style: IMAGE_STYLE,
+                        image: asset_server.load("sprites/ball_blue_large.png").into(),
+                        ..default()
+                    });
+                    // Text
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "Bevy Ball Game",
+                                get_title_text_style(&asset_server),
+                            )],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
+                        ..default()
+                    });
+                    // Image 2
+                    parent.spawn(ImageBundle {
+                        style: IMAGE_STYLE,
+                        image: asset_server.load("sprites/ball_red_large.png").into(),
+                        ..default()
+                    });
+                });
+            // === Play Button ===
             parent
                 .spawn((
                     ButtonBundle {
@@ -48,11 +72,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                         text: Text {
                             sections: vec![TextSection::new(
                                 "Play",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 32.0,
-                                    color: Color::WHITE,
-                                },
+                                get_button_text_style(&asset_server),
                             )],
                             alignment: TextAlignment::Center,
                             ..default()
@@ -60,18 +80,29 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                         ..default()
                     });
                 });
-            // quit
-            parent.spawn((
-                ButtonBundle {
-                    style: Style {
-                        size: Size::new(Val::Px(200.0), Val::Px(80.0)),
+            // === Quit Button ===
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOR.into(),
                         ..default()
                     },
-                    background_color: NORMAL_BUTTON_COLOR.into(),
-                    ..default()
-                },
-                QuitButton {},
-            ));
+                    QuitButton {},
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "Quit",
+                                get_button_text_style(&asset_server),
+                            )],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
         })
         .id();
 
