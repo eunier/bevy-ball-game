@@ -12,10 +12,7 @@ use camera::plugins::CameraPlugin;
 use enemy::plugins::EnemyPlugin;
 use exit::plugins::ExitPlugin;
 use game_over::plugins::GameOverPlugin;
-use high_score::{
-    resources::HighScores,
-    systems::{high_scores_updated, update_high_scores},
-};
+use high_score::plugins::HighScorePlugin;
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
 use score::{resources::Score, systems::update_score};
 use star::{
@@ -30,10 +27,11 @@ fn main() {
         .add_plugin(EnemyPlugin)
         .add_plugin(ExitPlugin)
         .add_plugin(GameOverPlugin)
+        .add_plugin(HighScorePlugin)
         // .init_resource::<EnemySpawnTimer>()
         .init_resource::<StarSpawnTimer>()
         .init_resource::<Score>()
-        .init_resource::<HighScores>()
+        // .init_resource::<HighScores>()
         // .add_event::<GameOver>()
         .add_startup_system(spawn_player)
         // .add_startup_system(spawn_camera)
@@ -50,8 +48,8 @@ fn main() {
         // .add_system(tick_enemy_spawn_time)
         // .add_system(spawn_enemies_over_time)
         .add_system(update_score)
-        .add_system(update_high_scores)
-        .add_system(high_scores_updated)
+        // .add_system(update_high_scores)
+        // .add_system(high_scores_updated)
         .add_system(tick_star_spawn_time)
         .add_system(spawn_stars_over_time)
         // .add_system(handle_game_over)
