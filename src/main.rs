@@ -1,14 +1,10 @@
-mod player_a;
+mod player;
 
+use crate::player::components::Player;
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
-// use player_a::hello as hi;
 use rand::prelude::*;
 
-// hi::();
-
 fn main() {
-    player_a::hi();
-
     App::new()
         .add_plugins(DefaultPlugins)
         .init_resource::<EnemySpawnTimer>()
@@ -57,8 +53,8 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
     });
 }
 
-#[derive(Component)]
-pub struct Player {}
+// #[derive(Component)]
+// pub struct Player {}
 
 pub const PLAYER_SIZE: f32 = 64.0;
 pub const PLAYER_SPEED: f32 = 500.0;
