@@ -1,4 +1,5 @@
 mod enemy;
+mod high_score;
 mod player;
 mod score;
 mod star;
@@ -11,6 +12,7 @@ use enemy::{
         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
     },
 };
+use high_score::{resources::HighScores, systems::{high_scores_updated, update_high_scores}};
 use player::systems::{confine_player_movement, player_hit_start, player_movement, spawn_player};
 use score::{resources::Score, systems::update_score};
 use star::{
@@ -465,31 +467,31 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 //     }
 // }
 
-#[derive(Resource, Debug)]
-pub struct HighScores {
-    pub scores: Vec<(String, u32)>,
-}
+// #[derive(Resource, Debug)]
+// pub struct HighScores {
+//     pub scores: Vec<(String, u32)>,
+// }
 
-impl Default for HighScores {
-    fn default() -> Self {
-        HighScores { scores: Vec::new() }
-    }
-}
+// impl Default for HighScores {
+//     fn default() -> Self {
+//         HighScores { scores: Vec::new() }
+//     }
+// }
 
-pub fn update_high_scores(
-    mut game_over_event_reader: EventReader<GameOver>,
-    mut high_scores: ResMut<HighScores>,
-) {
-    for event in game_over_event_reader.iter() {
-        high_scores.scores.push(("Player".to_string(), event.score));
-    }
-}
+// pub fn update_high_scores(
+//     mut game_over_event_reader: EventReader<GameOver>,
+//     mut high_scores: ResMut<HighScores>,
+// ) {
+//     for event in game_over_event_reader.iter() {
+//         high_scores.scores.push(("Player".to_string(), event.score));
+//     }
+// }
 
-pub fn high_scores_updated(high_scores: Res<HighScores>) {
-    if high_scores.is_changed() {
-        println!("High Scores: {:?}", high_scores)
-    }
-}
+// pub fn high_scores_updated(high_scores: Res<HighScores>) {
+//     if high_scores.is_changed() {
+//         println!("High Scores: {:?}", high_scores)
+//     }
+// }
 
 pub struct GameOver {
     pub score: u32,
