@@ -1,6 +1,5 @@
-use bevy::prelude::*;
-
 use super::resources::Score;
+use bevy::prelude::*;
 
 pub fn update_score(score: Res<Score>) {
     if score.is_changed() {

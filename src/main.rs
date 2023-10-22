@@ -1,11 +1,12 @@
 mod enemy;
+mod exit_game;
 mod game_over;
 mod high_score;
 mod player;
 mod score;
 mod star;
 
-use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
+use bevy::{prelude::*, window::PrimaryWindow};
 use enemy::{
     resources::EnemySpawnTimer,
     systems::{
@@ -13,6 +14,7 @@ use enemy::{
         spawn_enemies_over_time, tick_enemy_spawn_time, update_enemy_direction,
     },
 };
+use exit_game::systems::exit_game;
 use game_over::{events::GameOver, systems::handle_game_over};
 use high_score::{
     resources::HighScores,
@@ -56,14 +58,14 @@ fn main() {
         .run();
 }
 
-pub fn exit_game(
-    mut app_exit_event_writer: EventWriter<AppExit>,
-    keyboard_input: Res<Input<KeyCode>>,
-) {
-    if keyboard_input.just_pressed(KeyCode::Escape) {
-        app_exit_event_writer.send(AppExit);
-    }
-}
+// pub fn exit_game(
+//     mut app_exit_event_writer: EventWriter<AppExit>,
+//     keyboard_input: Res<Input<KeyCode>>,
+// ) {
+//     if keyboard_input.just_pressed(KeyCode::Escape) {
+//         app_exit_event_writer.send(AppExit);
+//     }
+// }
 
 pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<PrimaryWindow>>) {
     let window = window_query.get_single().unwrap();
