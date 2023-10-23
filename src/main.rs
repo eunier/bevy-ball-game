@@ -3,6 +3,7 @@ mod camera;
 mod enemy;
 mod exit;
 mod game_over;
+mod game_over_menu;
 mod high_score;
 mod main_menu;
 mod player;
@@ -16,6 +17,7 @@ use camera::plugins::CameraPlugin;
 use enemy::plugins::EnemyPlugin;
 use exit::plugins::ExitPlugin;
 use game_over::plugins::GameOverPlugin;
+use game_over_menu::plugins::GameOverMenuPlugin;
 use high_score::plugins::HighScorePlugin;
 use main_menu::plugins::MainMenuPlugin;
 use player::plugins::PlayerPlugin;
@@ -29,6 +31,7 @@ fn main() {
         .add_plugin(CameraPlugin)
         .add_plugin(EnemyPlugin)
         .add_plugin(ExitPlugin)
+        .add_plugin(GameOverMenuPlugin)
         .add_plugin(GameOverPlugin)
         .add_plugin(HighScorePlugin)
         .add_plugin(MainMenuPlugin)
