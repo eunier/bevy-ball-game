@@ -52,7 +52,7 @@ pub fn player_hit_start(
             let did_player_hit_star = distance < player_radius + star_radius;
 
             if did_player_hit_star {
-                println!("Player huit star!");
+                info!("Player huit star!");
                 score.value += 1;
                 let sound_effect = asset_server.load("audio/impactWood_medium_000.ogg");
                 audio.play(sound_effect);

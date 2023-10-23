@@ -62,19 +62,19 @@ pub fn setup(mut commands: Commands) {
 
 pub fn print_names(person_query: Query<&Person>) {
     for person in person_query.iter() {
-        println!("name: {}", person.name)
+        info!("name: {}", person.name)
     }
 }
 
 pub fn people_with_jobs(person_query: Query<&Person, With<Employed>>) {
     for person in person_query.iter() {
-        println!("{} has a job.", person.name);
+        info!("{} has a job.", person.name);
     }
 }
 
 pub fn people_ready_for_hire(person_query: Query<&Person, Without<Employed>>) {
     for person in person_query.iter() {
-        println!("{} ready for hire.", person.name);
+        info!("{} ready for hire.", person.name);
     }
 }
 
@@ -86,7 +86,7 @@ pub fn person_does_job(person_query: Query<(&Person, &Employed)>) {
             Job::Lawyer => "Lawyer",
         };
 
-        println!("{0} is a {1}", person.name, job_name);
+        info!("{0} is a {1}", person.name, job_name);
     }
 }
 

@@ -142,7 +142,7 @@ pub fn enemy_hit_player(
             let did_enemy_hit_player = distance < player_radius + enemy_radius;
 
             if did_enemy_hit_player {
-                println!("Enemy hit player! Game Over!");
+                info!("Enemy hit player! Game Over!");
                 let sound_effect = asset_server.load("audio/explosionCrunch_000.ogg");
                 audio.play(sound_effect);
                 commands.entity(player_entity).despawn();

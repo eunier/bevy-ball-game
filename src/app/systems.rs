@@ -12,7 +12,7 @@ pub fn transition_to_game_state(
     if keyboard_input.just_pressed(KeyCode::G) {
         if app_state.0 != AppState::Game {
             next_app_state.set(AppState::Game);
-            println!("Entered AppState::Game");
+            info!("Entered AppState::Game");
         }
     }
 }
@@ -27,7 +27,7 @@ pub fn transition_to_main_menu_state(
         if app_state.0 != AppState::MainMenu {
             next_app_state.set(AppState::MainMenu);
             next_simulation_state.set(SimulationState::Paused);
-            println!("Entered AppState::MainMenu");
+            info!("Entered AppState::MainMenu");
         }
     }
 }

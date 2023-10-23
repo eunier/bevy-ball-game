@@ -18,12 +18,12 @@ pub fn toggle_simulation(
     if keyboard_input.just_pressed(KeyCode::Space) {
         if simulation_state.0 == SimulationState::Running {
             next_simulation_state.set(SimulationState::Paused);
-            println!("Simulation Paused.");
+            info!("Simulation Paused.");
         }
 
         if simulation_state.0 == SimulationState::Paused {
             next_simulation_state.set(SimulationState::Running);
-            println!("Simulation Running.");
+            info!("Simulation Running.");
         }
     }
 }
