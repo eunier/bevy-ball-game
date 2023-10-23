@@ -11,6 +11,7 @@ mod player;
 mod score;
 mod simulation;
 mod star;
+mod hud;
 
 use app::plugins::AppStatePlugin;
 use bevy::{prelude::App, DefaultPlugins};
@@ -20,6 +21,7 @@ use exit::plugins::ExitPlugin;
 use game_over::plugins::GameOverPlugin;
 use game_over_menu::plugins::GameOverMenuPlugin;
 use high_score::plugins::HighScorePlugin;
+use hud::puglins::HudPlugin;
 use main_menu::plugins::MainMenuPlugin;
 use pause_menu::plugins::PauseMenuPlugin;
 use player::plugins::PlayerPlugin;
@@ -42,6 +44,7 @@ fn main() {
         .add_plugin(ScorePlugin)
         .add_plugin(SimulationPlugin)
         .add_plugin(StarPlugin)
+        .add_plugin(HudPlugin)
         .add_plugin(PauseMenuPlugin)
         .run();
 }
