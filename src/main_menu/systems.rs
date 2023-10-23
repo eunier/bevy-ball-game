@@ -3,8 +3,8 @@ use bevy::prelude::*;
 use super::{
     components::{MainMenu, PlayButton, QuitButton},
     constants::{
-        BUTTON_STYLE, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR, PRESSED_BUTTON_COLOR,
-        TITLE_STYLE,
+        BUTTON_STYLE, HOVERED_BUTTON_COLOR, IMAGE_STYLE, MAIN_MENU_STYLE, NORMAL_BUTTON_COLOR,
+        PRESSED_BUTTON_COLOR, TITLE_STYLE,
     },
     helpers::{get_button_text_style, get_title_text_style},
 };
@@ -18,8 +18,23 @@ pub fn interact_with_play_button(
     if let Ok((interaction, mut background_color)) = button_query.get_single_mut() {
         match *interaction {
             Interaction::Clicked => *background_color = PRESSED_BUTTON_COLOR.into(),
-            Interaction::Hovered => *background_color = PRESSED_BUTTON_COLOR.into(),
-            Interaction::None => *background_color = PRESSED_BUTTON_COLOR.into(),
+            Interaction::Hovered => *background_color = HOVERED_BUTTON_COLOR.into(),
+            Interaction::None => *background_color = NORMAL_BUTTON_COLOR.into(),
+        }
+    }
+}
+
+pub fn interact_with_quit_button(
+    mut button_query: Query<
+        (&Interaction, &mut BackgroundColor),
+        (Changed<Interaction>, With<QuitButton>),
+    >,
+) {
+    if let Ok((interaction, mut background_color)) = button_query.get_single_mut() {
+        match *interaction {
+            Interaction::Clicked => *background_color = PRESSED_BUTTON_COLOR.into(),
+            Interaction::Hovered => *background_color = HOVERED_BUTTON_COLOR.into(),
+            Interaction::None => *background_color = NORMAL_BUTTON_COLOR.into(),
         }
     }
 }
