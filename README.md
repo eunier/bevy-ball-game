@@ -1,6 +1,6 @@
 # Bavy Ball Game
 
-Note: source code at: [https://gitlab.com/games6530142/bevy-ball-game](https://gitlab.com/games6530142/bevy-ball-game)
+Note: source code at my gitlab account: [https://gitlab.com/games6530142/bevy-ball-game](https://gitlab.com/games6530142/bevy-ball-game)
 
 Game writen in rust.
 
